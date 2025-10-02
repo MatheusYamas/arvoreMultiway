@@ -20,32 +20,6 @@ public class Arvore23 {
         }
     }
 
-    //Classe public remover
-    public void remover(Integer valor) {
-        if (vazia(raiz)) {
-            return;
-        }
-        recursaoRemover(this.raiz, valor);
-        if (raiz != null && raiz.getInformacao1() == null) {
-            this.raiz = raiz.getEsquerda();
-        }
-    }
-
-    //Classe public buscar
-    public boolean buscar(Integer valor) {
-        return recursaoBuscar(this.raiz, valor);
-    }
-
-    //Classe public verificar tabela in-ordem
-    public void inOrdem() {
-        System.out.println("Percorrendo Em-Ordem:");
-        recursaoIn(this.raiz);
-    }
-
-    private boolean vazia(Node no) {
-        return no == null;
-    }
-
     //Recursão para inserir valor
     private Node recursaoInserir(Node no, Integer informacao) {
         if (no.eFolha()) {
@@ -133,6 +107,57 @@ public class Arvore23 {
             no.setDireita(null);
         }
         return noPai;
+    }
+
+    //Classe public buscar
+    public boolean buscar(Integer valor) {
+        return recursaoBuscar(this.raiz, valor);
+    }
+
+    private boolean recursaoBuscar(Node no, Integer valor) {
+        if (no == null) return false;
+        if (valor.equals(no.getInformacao1()) || (no.cheio() && valor.equals(no.getInformacao2()))) {
+            return true;
+        }
+        if (valor < no.getInformacao1()) {
+            return recursaoBuscar(no.getEsquerda(), valor);
+        }
+        else if (no.cheio() && valor > no.getInformacao2()) {
+            return recursaoBuscar(no.getDireita(), valor);
+        }
+        else {
+            return recursaoBuscar(no.getMeio(), valor);
+        }
+    }
+
+    //Classe public verificar tabela in-ordem
+    public void inOrdem() {
+        System.out.println("Percorrendo Em-Ordem:");
+        recursaoIn(this.raiz);
+    }
+
+    private void recursaoIn(Node no) {
+        if (no == null) return;
+        recursaoIn(no.getEsquerda());
+        if(no.getInformacao1() != null) {
+            System.out.print(no.getInformacao1() + " ");
+        }
+        recursaoIn(no.getMeio());
+        if (no.cheio()) {
+            System.out.print(no.getInformacao2() + " ");
+            recursaoIn(no.getDireita());
+        }
+    }
+
+    //Classe public remover
+    public void remover(Integer valor) {
+        if (vazia(raiz)) {
+            return;
+        }
+        recursaoRemover(this.raiz, valor);
+        if (raiz != null && raiz.getInformacao1() == null) {
+            this.raiz = raiz.getEsquerda();
+        }
     }
 
     private void recursaoRemover(Node no, Integer valor) {
@@ -229,32 +254,7 @@ public class Arvore23 {
         pai.setDireita(null);
     }
 
-    private boolean recursaoBuscar(Node no, Integer valor) {
-        if (no == null) return false;
-        if (valor.equals(no.getInformacao1()) || (no.cheio() && valor.equals(no.getInformacao2()))) {
-            return true;
-        }
-        if (valor < no.getInformacao1()) {
-            return recursaoBuscar(no.getEsquerda(), valor);
-        }
-        else if (no.cheio() && valor > no.getInformacao2()) {
-            return recursaoBuscar(no.getDireita(), valor);
-        }
-        else {
-            return recursaoBuscar(no.getMeio(), valor);
-        }
-    }
-
-    private void recursaoIn(Node no) {
-        if (no == null) return;
-        recursaoIn(no.getEsquerda());
-        if(no.getInformacao1() != null) {
-            System.out.print(no.getInformacao1() + " ");
-        }
-        recursaoIn(no.getMeio());
-        if (no.cheio()) {
-            System.out.print(no.getInformacao2() + " ");
-            recursaoIn(no.getDireita());
-        }
+    private boolean vazia(Node no) {
+        return no == null;
     }
 }
