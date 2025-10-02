@@ -116,7 +116,7 @@ public class Arvore23 {
 
     private boolean recursaoBuscar(Node no, Integer valor) {
         if (no == null) return false;
-        if (valor.equals(no.getInformacao1()) || (no.cheio() && valor.equals(no.getInformacao2()))) {
+        if (valor == no.getInformacao1() || (no.cheio() && valor == no.getInformacao2())) {
             return true;
         }
         if (valor < no.getInformacao1()) {
@@ -164,7 +164,7 @@ public class Arvore23 {
         if (no == null) return;
 
         int caminho = (valor < no.getInformacao1()) ? 0 : (!no.cheio() || valor <= no.getInformacao2()) ? 1 : 2;
-        if (caminho == 1 && (valor.equals(no.getInformacao1()) || (no.cheio() && valor.equals(no.getInformacao2())))) {
+        if (caminho == 1 && (valor == no.getInformacao1() || (no.cheio() && valor == no.getInformacao2()))) {
             if (no.eFolha()) {
                 no.removerValor(valor);
             }
@@ -172,7 +172,7 @@ public class Arvore23 {
                 Node sucessor = encontrarSucessor(no, valor);
                 Integer valorSucessor = sucessor.getInformacao1();
                 recursaoRemover(this.raiz, valorSucessor);
-                if (valor.equals(no.getInformacao1())) {
+                if (valor == no.getInformacao1()) {
                     no.setInformacao1(valorSucessor);
                 }
                 else {
