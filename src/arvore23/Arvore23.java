@@ -1,11 +1,14 @@
 package arvore23;
 
+
+// Classe principal
 public class Arvore23 {
     private Node raiz;
     public Arvore23() {
         this.raiz = null;
     }
 
+    //Classe public inserir
     public void inserir(Integer informacao) {
         if (vazia(this.raiz)) {
             this.raiz = new Node(informacao);
@@ -17,6 +20,7 @@ public class Arvore23 {
         }
     }
 
+    //Classe public remover
     public void remover(Integer valor) {
         if (vazia(raiz)) {
             return;
@@ -27,10 +31,12 @@ public class Arvore23 {
         }
     }
 
+    //Classe public buscar
     public boolean buscar(Integer valor) {
         return recursaoBuscar(this.raiz, valor);
     }
 
+    //Classe public verificar tabela in-ordem
     public void inOrdem() {
         System.out.println("Percorrendo Em-Ordem:");
         recursaoIn(this.raiz);
@@ -40,6 +46,7 @@ public class Arvore23 {
         return no == null;
     }
 
+    //Recursão para inserir valor
     private Node recursaoInserir(Node no, Integer informacao) {
         if (no.eFolha()) {
             return no.cheio() ? split(no, informacao, null) : adicionarInfo(no, informacao);
@@ -47,13 +54,16 @@ public class Arvore23 {
         Node filhoPromovido;
         if (informacao < no.getInformacao1()) {
             filhoPromovido = recursaoInserir(no.getEsquerda(), informacao);
-        } else if (!no.cheio() || informacao < no.getInformacao2()) {
+        }
+        else if (!no.cheio() || informacao < no.getInformacao2()) {
             filhoPromovido = recursaoInserir(no.getMeio(), informacao);
-        } else {
+        }
+        else {
             filhoPromovido = recursaoInserir(no.getDireita(), informacao);
         }
         return (filhoPromovido == null) ? null : absorverPromocao(no, filhoPromovido);
     }
+
 
     private Node adicionarInfo(Node no, Integer info) {
         no.adicionarInformacao(info);
@@ -65,7 +75,8 @@ public class Arvore23 {
         if (!pai.cheio()) {
             absorverSplit(pai, filhoPromovido, valorPromovido);
             return null;
-        } else {
+        }
+        else {
             return split(pai, valorPromovido, filhoPromovido);
         }
     }
@@ -77,7 +88,8 @@ public class Arvore23 {
             pai.setDireita(pai.getMeio());
             pai.setEsquerda(filhoPromovido.getEsquerda());
             pai.setMeio(filhoPromovido.getMeio());
-        } else {
+        }
+        else {
             pai.setDireita(filhoPromovido.getMeio());
             pai.setMeio(filhoPromovido.getEsquerda());
         }
@@ -85,11 +97,21 @@ public class Arvore23 {
 
     private Node split(Node no, Integer informacao, Node nosFilhos) {
         Integer menor, meio, maior;
-        Integer v1 = no.getInformacao1();
-        Integer v2 = no.getInformacao2();
-        if (informacao < v1) { menor = informacao; meio = v1; maior = v2;
-        } else if (informacao < v2) { menor = v1; meio = informacao; maior = v2;
-        } else { menor = v1; meio = v2; maior = informacao; }
+        if (informacao < no.getInformacao1()) {
+            menor = informacao;
+            meio = no.getInformacao1();
+            maior = no.getInformacao2();
+        }
+        else if (informacao < no.getInformacao2()) {
+            menor = no.getInformacao1();
+            meio = informacao;
+            maior = no.getInformacao2();
+        }
+        else {
+            menor = no.getInformacao1();
+            meio = no.getInformacao2();
+            maior = informacao;
+        }
 
         no.setInformacao1(menor); no.setInformacao2(null);
         Node noIrmao = new Node(maior);
@@ -100,9 +122,11 @@ public class Arvore23 {
             if (informacao < meio) {
                 noIrmao.setEsquerda(no.getMeio()); noIrmao.setMeio(no.getDireita());
                 no.setEsquerda(nosFilhos.getEsquerda()); no.setMeio(nosFilhos.getMeio());
-            } else if (informacao > meio) {
+            }
+            else if (informacao > meio) {
                 noIrmao.setEsquerda(nosFilhos.getEsquerda()); noIrmao.setMeio(nosFilhos.getMeio());
-            } else {
+            }
+            else {
                 no.setMeio(nosFilhos.getEsquerda()); noIrmao.setEsquerda(nosFilhos.getMeio());
                 noIrmao.setMeio(no.getDireita());
             }
@@ -118,14 +142,20 @@ public class Arvore23 {
         if (caminho == 1 && (valor.equals(no.getInformacao1()) || (no.cheio() && valor.equals(no.getInformacao2())))) {
             if (no.eFolha()) {
                 no.removerValor(valor);
-            } else {
+            }
+            else {
                 Node sucessor = encontrarSucessor(no, valor);
                 Integer valorSucessor = sucessor.getInformacao1();
                 recursaoRemover(this.raiz, valorSucessor);
-                if (valor.equals(no.getInformacao1())) no.setInformacao1(valorSucessor);
-                else no.setInformacao2(valorSucessor);
+                if (valor.equals(no.getInformacao1())) {
+                    no.setInformacao1(valorSucessor);
+                }
+                else {
+                    no.setInformacao2(valorSucessor);
+                }
             }
-        } else {
+        }
+        else {
             recursaoRemover(no.getFilho(caminho), valor);
             Underflow(no, caminho);
         }
@@ -141,18 +171,23 @@ public class Arvore23 {
 
     private void Underflow(Node pai, int indiceFilhoVazio) {
         Node filhoVazio = pai.getFilho(indiceFilhoVazio);
-        if (filhoVazio != null && !vazia(filhoVazio)) return;
+        if (filhoVazio != null && !vazia(filhoVazio)) {
+            return;
+        }
 
         Node irmaoEsq = (indiceFilhoVazio > 0) ? pai.getFilho(indiceFilhoVazio - 1) : null;
         Node irmaoDir = (indiceFilhoVazio < 2) ? pai.getFilho(indiceFilhoVazio + 1) : null;
 
         if (irmaoEsq != null && irmaoEsq.cheio()) {
             redistribuirEsquerda(pai, indiceFilhoVazio, irmaoEsq, filhoVazio);
-        } else if (irmaoDir != null && irmaoDir.cheio()) {
+        }
+        else if (irmaoDir != null && irmaoDir.cheio()) {
             redistribuirDireita(pai, indiceFilhoVazio, irmaoDir, filhoVazio);
-        } else if (irmaoEsq != null) {
+        }
+        else if (irmaoEsq != null) {
             fundirEsquerda(pai, indiceFilhoVazio, irmaoEsq);
-        } else if (irmaoDir != null) {
+        }
+        else if (irmaoDir != null) {
             fundirDireita(pai, indiceFilhoVazio, irmaoDir);
         }
     }
@@ -172,16 +207,25 @@ public class Arvore23 {
     private void fundirEsquerda(Node pai, int indiceFilho, Node irmao) {
         irmao.adicionarInformacao(pai.getInformacao(indiceFilho - 1));
         pai.removerValor(pai.getInformacao(indiceFilho - 1));
-        if (indiceFilho == 1) pai.setMeio(irmao); else pai.setDireita(irmao);
+        if (indiceFilho == 1) {
+            pai.setMeio(irmao);
+        }
+        else {
+            pai.setDireita(irmao);
+        }
     }
 
     private void fundirDireita(Node pai, int indiceFilho, Node irmao) {
         Node filho = pai.getFilho(indiceFilho);
         filho.adicionarInformacao(pai.getInformacao(indiceFilho));
         filho.adicionarInformacao(irmao.getInformacao1());
-        if(irmao.cheio()) filho.adicionarInformacao(irmao.getInformacao2());
+        if(irmao.cheio()) {
+            filho.adicionarInformacao(irmao.getInformacao2());
+        }
         pai.removerValor(pai.getInformacao(indiceFilho));
-        if (indiceFilho == 0) pai.setMeio(filho);
+        if (indiceFilho == 0) {
+            pai.setMeio(filho);
+        }
         pai.setDireita(null);
     }
 
@@ -192,9 +236,11 @@ public class Arvore23 {
         }
         if (valor < no.getInformacao1()) {
             return recursaoBuscar(no.getEsquerda(), valor);
-        } else if (no.cheio() && valor > no.getInformacao2()) {
+        }
+        else if (no.cheio() && valor > no.getInformacao2()) {
             return recursaoBuscar(no.getDireita(), valor);
-        } else {
+        }
+        else {
             return recursaoBuscar(no.getMeio(), valor);
         }
     }
@@ -202,7 +248,9 @@ public class Arvore23 {
     private void recursaoIn(Node no) {
         if (no == null) return;
         recursaoIn(no.getEsquerda());
-        if(no.getInformacao1() != null) System.out.print(no.getInformacao1() + " ");
+        if(no.getInformacao1() != null) {
+            System.out.print(no.getInformacao1() + " ");
+        }
         recursaoIn(no.getMeio());
         if (no.cheio()) {
             System.out.print(no.getInformacao2() + " ");
